@@ -2,13 +2,14 @@
   "resources": {
     "models": {
       "dungeon": {
-        "path": "dungeon/StoneWallNext4.obj"
+        "path": "dungeon/scene.gltf",
+        "flip_uvs": true
       }
     }
   },
   "window": {
-    "height": 600,
+    "height": 1200,
     "title": "CryptMancer",
-    "width": 800
+    "width": 1600
   }
 }
