@@ -15,7 +15,15 @@ namespace app {
 
         void draw_dungeon();
 
+        void begin_draw() override;
+
+        void update_camera();
+
+        void update() override;
+
         void draw() override;
+
+        void end_draw() override;
     };
 }
 #endif //MATF_RG_PROJECT_MAINCONTROLLER_HPP

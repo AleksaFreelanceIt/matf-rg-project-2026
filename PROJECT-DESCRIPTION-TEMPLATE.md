@@ -26,6 +26,7 @@
 [ ] Bloom with the use of HDR
 
 ### Group B:
+
 [ ] Deferred Shading  
 [ ] Point Shadows  
 [ ] SSAO
@@ -36,7 +37,7 @@
 
 ## Models:
 
-[link1]   
+[[link1] ](https://sketchfab.com/3d-models/dungeon-wall-floor-test-set-8179c07fbb62442888fcabedea96ffd3)  
 [link2]
 
 ## Textures
