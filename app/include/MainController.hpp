@@ -12,6 +12,10 @@ namespace app {
         void initialize() override;
 
         bool loop() override;
+
+        void draw_dungeon();
+
+        void draw() override;
     };
 }
 #endif //MATF_RG_PROJECT_MAINCONTROLLER_HPP
