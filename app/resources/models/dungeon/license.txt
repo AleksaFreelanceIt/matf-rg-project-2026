@@ -1,0 +1,11 @@
+Model Information:
+* title:	Dungeon Wall-floor Test Set
+* source:	https://sketchfab.com/3d-models/dungeon-wall-floor-test-set-8179c07fbb62442888fcabedea96ffd3
+* author:	C. Anastasiadis (https://sketchfab.com/bagatir)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Dungeon Wall-floor Test Set" (https://sketchfab.com/3d-models/dungeon-wall-floor-test-set-8179c07fbb62442888fcabedea96ffd3) by C. Anastasiadis (https://sketchfab.com/bagatir) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
