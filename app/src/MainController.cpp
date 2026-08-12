@@ -11,7 +11,18 @@
 #include <engine/graphics/OpenGL.hpp>
 
 namespace app {
+    class MainPlatformEventObserver : public engine::platform::PlatformEventObserver {
+        void on_mouse_move(engine::platform::MousePosition position) override;
+    };
+
+    void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition position) {
+        auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
+        camera->rotate_camera(position.dx, position.dy);
+    }
+
     void MainController::initialize() {
+        auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+        platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
         engine::graphics::OpenGL::enable_depth_testing();
     }
 
