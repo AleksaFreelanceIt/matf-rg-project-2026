@@ -13,6 +13,8 @@ namespace app {
 
         bool loop() override;
 
+        void draw_skybox();
+
         void draw_dungeon();
 
         void begin_draw() override;
