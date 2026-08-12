@@ -15,6 +15,10 @@ namespace app {
 
         void draw_skybox();
 
+        void draw_statue();
+
+        void draw_halo();
+
         void draw_dungeon();
 
         void begin_draw() override;

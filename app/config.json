@@ -1,6 +1,12 @@
 {
   "resources": {
     "models": {
+      "halo": {
+        "path": "halo/halo.glb"
+      },
+      "statue": {
+        "path": "statue/statue.glb"
+      },
       "dungeon": {
         "path": "dungeon/scene.gltf",
         "flip_uvs": true

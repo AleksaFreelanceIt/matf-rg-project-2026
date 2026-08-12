@@ -101,7 +101,43 @@ namespace app {
         graphics->draw_skybox(shader, skybox);
     }
 
+    void MainController::draw_statue() {
+        auto resources                    = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics                     = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        engine::resources::Model *statue  = resources->model("statue");
+        //shaders
+        engine::resources::Shader *shader = resources->shader("basic");
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+        glm::mat4 model = glm::mat4(1.0f);
+        model           = glm::translate(model, glm::vec3(0.1, -0.5, -1.4));
+        model           = glm::scale(model, glm::vec3(15));
+        model           = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1, 0, 0));
+        model           = glm::rotate(model, glm::radians(-45.0f), glm::vec3(0, 0, 1));
+        shader->set_mat4("model", model);
+        statue->draw(shader);
+    }
+
+    void MainController::draw_halo() {
+        auto resources                    = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics                     = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        engine::resources::Model *halo    = resources->model("halo");
+        //shaders
+        engine::resources::Shader *shader = resources->shader("basic");
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+        glm::mat4 model = glm::mat4(1.0f);
+        model           = glm::translate(model, glm::vec3(0, 0, 0));
+        model           = glm::scale(model, glm::vec3(1));
+        shader->set_mat4("model", model);
+        halo->draw(shader);
+    }
+
     void MainController::draw() {
+        draw_statue();
+        draw_halo();
         draw_dungeon();
         draw_skybox();
     }
