@@ -37,6 +37,10 @@ uniform vec3 lightColor;
 
 uniform float cutOff;
 uniform float outerCutOff;
+//Circle
+uniform vec3 circleLightPos;
+uniform vec3 circleLightColor;
+uniform float circleLightStrenght;
 
 uniform float ambientStrength;
 uniform float specularStrength;
@@ -63,10 +67,16 @@ void main() {
     float spec = pow(max(dot(norm, halfwayDir), 0.0), 32.0);
 
     vec3 specular = specularStrength * spec * lightColor * intensity;
+    //Circle
+    vec3 circleLightDir = normalize(circleLightPos - FragPos);
+    float circleDistance = length(circleLightPos - FragPos);
+    float circleAttenuation = 1.0 / (1.0 + 0.09 * circleDistance + circleDistance * 0.032 * circleDistance);
+    float circleDiff = max(dot(norm, circleLightDir), 0.0);
+    vec3 circleDiffuse = circleDiff * circleAttenuation * circleLightStrenght * circleLightColor;
 
     //Ambient lighting
     vec3 ambient = ambientStrength * albedo;
 
-    vec3 result = ambient + (diffuse + specular) * albedo;
+    vec3 result = ambient + (diffuse + specular + circleDiffuse) * albedo;
     FragColor = vec4(result, 1.0);
 }
