@@ -38,24 +38,6 @@ namespace app {
         return true;
     }
 
-    void MainController::draw_dungeon() {
-        auto resources                    = engine::core::Controller::get<engine::resources::ResourcesController>();
-        auto graphics                     = engine::core::Controller::get<engine::graphics::GraphicsController>();
-        engine::resources::Model *dungeon = resources->model("dungeon");
-
-        //shaders
-        engine::resources::Shader *shader = resources->shader("basic");
-        shader->use();
-        shader->set_mat4("projection", graphics->projection_matrix());
-        shader->set_mat4("view", graphics->camera()->view_matrix());
-        glm::mat4 model = glm::mat4(1.0f);
-        model           = glm::translate(model, glm::vec3(-0.5f, -0.5f, -2.0f));
-        model           = glm::scale(model, glm::vec3(0.3f));
-        model           = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1, 0, 0));
-        shader->set_mat4("model", model);
-        dungeon->draw(shader);
-    }
-
     void MainController::update_camera() {
         auto gui_controller = engine::core::Controller::get<GuiController>();
         if (gui_controller->is_enabled()) {
@@ -106,33 +88,74 @@ namespace app {
         auto graphics                     = engine::core::Controller::get<engine::graphics::GraphicsController>();
         engine::resources::Model *statue  = resources->model("statue");
         //shaders
-        engine::resources::Shader *shader = resources->shader("basic");
+        engine::resources::Shader *shader = resources->shader("spotlight");
         shader->use();
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
         glm::mat4 model = glm::mat4(1.0f);
-        model           = glm::translate(model, glm::vec3(0.1, -0.5, -1.4));
-        model           = glm::scale(model, glm::vec3(15));
-        model           = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1, 0, 0));
-        model           = glm::rotate(model, glm::radians(-45.0f), glm::vec3(0, 0, 1));
+        model           = glm::translate(model, glm::vec3(0.45f, 0, 0.75f));
+        model           = glm::scale(model, glm::vec3(0.012f));
+        model           = glm::rotate(model, glm::radians(-45.0f), glm::vec3(0, 1, 0));
         shader->set_mat4("model", model);
+        //Lighting
+        glm::vec3 lightPos(0.45f, 2, 0.75f);
+        glm::vec3 target(0.45f, 0.8f, 0.75f);
+        glm::vec3 lightDirection = glm::normalize(target - lightPos);
+        shader->set_vec3("lightPos", lightPos);
+        shader->set_vec3("lightDirection", lightDirection);
+        shader->set_vec3("lightColor", glm::vec3(0, 0.7f, 1.0f));
+        shader->set_float("ambientStrength", 0.08f);
+        shader->set_float("specularStrength", 0.25f);
+        shader->set_float("cutOff", glm::cos(glm::radians(20.0f)));
+        shader->set_float("outerCutOff", glm::cos(glm::radians(30.0f)));
         statue->draw(shader);
     }
 
     void MainController::draw_halo() {
-        auto resources                    = engine::core::Controller::get<engine::resources::ResourcesController>();
-        auto graphics                     = engine::core::Controller::get<engine::graphics::GraphicsController>();
-        engine::resources::Model *halo    = resources->model("halo");
+        auto resources                 = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics                  = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        engine::resources::Model *halo = resources->model("halo");
+
         //shaders
         engine::resources::Shader *shader = resources->shader("basic");
         shader->use();
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
         glm::mat4 model = glm::mat4(1.0f);
-        model           = glm::translate(model, glm::vec3(0, 0, 0));
-        model           = glm::scale(model, glm::vec3(1));
+        model           = glm::translate(model, glm::vec3(0.45f, 0, 0.75f));
+        model           = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1, 0, 0));
+        model           = glm::scale(model, glm::vec3(0.04f));
+
         shader->set_mat4("model", model);
         halo->draw(shader);
+    }
+
+    void MainController::draw_dungeon() {
+        auto resources                    = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics                     = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        engine::resources::Model *dungeon = resources->model("dungeon");
+
+        //shaders
+        engine::resources::Shader *shader = resources->shader("spotlight");
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+        glm::mat4 model = glm::mat4(1.0f);
+        model           = glm::scale(model, glm::vec3(0.3f));
+        model           = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1, 0, 0));
+
+        glm::vec3 lightPos(0.45f, 2, 0.75f);
+        glm::vec3 target(0.45f, 0.8f, 0.75f);
+        glm::vec3 lightDirection = glm::normalize(target - lightPos);
+        shader->set_vec3("lightPos", lightPos);
+        shader->set_vec3("lightDirection", lightDirection);
+        shader->set_vec3("lightColor", glm::vec3(0, 0.7f, 1.0f));
+        shader->set_float("ambientStrength", 0.08f);
+        shader->set_float("specularStrength", 0.25f);
+        shader->set_float("cutOff", glm::cos(glm::radians(20.0f)));
+        shader->set_float("outerCutOff", glm::cos(glm::radians(30.0f)));
+        shader->set_mat4("model", model);
+        dungeon->draw(shader);
     }
 
     void MainController::draw() {
