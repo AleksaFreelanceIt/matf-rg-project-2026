@@ -8,8 +8,6 @@
 #include <imgui.h>
 
 namespace app {
-    float color[3] = {1.0f, 0.0f, 0.0f};
-
     void GuiController::initialize() {
         ImGuiStyle &style       = ImGui::GetStyle();
         style.WindowRounding    = 5.3f;
@@ -70,7 +68,7 @@ namespace app {
         auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
         graphics->begin_gui();
         ImGui::Begin("ColorPicker");
-        ImGui::ColorEdit3("Color", color);
+        ImGui::ColorPicker3("Color", color);
         ImGui::End();
 
         graphics->end_gui();

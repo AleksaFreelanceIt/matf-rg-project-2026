@@ -13,7 +13,14 @@ namespace app {
             return "app::GuiController";
         }
 
-    private:
+        const float *get_color() const {
+            return color;
+        }
+
+    private
+    :
+        float color[3] = {0.0f, 1.0f, 0.5f};
+
         void initialize() override;
 
         void draw() override;
