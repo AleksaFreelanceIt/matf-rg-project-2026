@@ -7,26 +7,26 @@
 #include <engine/core/Controller.hpp>
 
 namespace app {
-    class GuiController : public engine::core::Controller {
-    public:
-        std::string_view name() const override {
-            return "app::GuiController";
-        }
+class GuiController : public engine::core::Controller {
+public:
+    std::string_view name() const override {
+        return "app::GuiController";
+    }
 
-        const float *get_color() const {
-            return color;
-        }
+    const float *get_color() const {
+        return color;
+    }
 
-    private
+private
     :
-        float color[3] = {0.0f, 1.0f, 0.5f};
+    float color[3] = {0.0f, 1.0f, 0.5f};
 
-        void initialize() override;
+    void initialize() override;
 
-        void draw() override;
+    void draw() override;
 
-        void poll_events() override;
-    };
-}
+    void poll_events() override;
+};
+}// namespace app
 
-#endif //MATF_RG_PROJECT_GUICONTROLLER_HPP
+#endif//MATF_RG_PROJECT_GUICONTROLLER_HPP
