@@ -70,7 +70,73 @@ namespace app {
     }
 
     void MainController::update() {
+        auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+
+        if (!camera_event_active && platform->key(engine::platform::KeyId::KEY_Q).state() ==
+            engine::platform::Key::State::JustPressed) {
+            start_camera_event();
+        }
+
+        if (camera_event_active) {
+            update_camera_event();
+            return;
+        }
         update_camera();
+    }
+
+    void MainController::start_camera_event() {
+        auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        auto camera   = graphics->camera();
+
+        camera_start_position = camera->Position;
+        camera_start_front    = camera->Front;
+        camera_start_yaw      = camera->Yaw;
+        camera_start_pitch    = camera->Pitch;
+
+        camera_event_active = true;
+        camera_event_step   = CameraEventStep::Shot1;
+        camera_event_timer  = 0.0f;
+    }
+
+    void MainController::update_camera_event() {
+        auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+        auto camera   = graphics->camera();
+
+        camera_event_timer += platform->dt();
+        glm::vec3 target(0.45f, 0.8f, 0.75f);
+        switch (camera_event_step) {
+        case CameraEventStep::Shot1: camera->Position = glm::vec3(1.8f, 1.2f, 2.2f);
+            camera->Front = glm::normalize(target - camera->Position);
+            if (camera_event_timer > 2.0f) {
+                camera_event_step  = CameraEventStep::Shot2;
+                camera_event_timer = 0.0f;
+            }
+            break;
+        case CameraEventStep::Shot2: camera->Position = glm::vec3(-1.2f, 1.0f, 1.5f);
+            camera->Front = glm::normalize(target - camera->Position);
+            if (camera_event_timer > 2.0f) {
+                camera_event_step  = CameraEventStep::Shot3;
+                camera_event_timer = 0.0f;
+            }
+            break;
+        case CameraEventStep::Shot3: camera->Position = glm::vec3(0.8f, 1.6f, -0.8f);
+            camera->Front = glm::normalize(target - camera->Position);
+            if (camera_event_timer > 2.0f) {
+                camera_event_step  = CameraEventStep::Return;
+                camera_event_timer = 0.0f;
+            }
+            break;
+        case CameraEventStep::Return: camera->Position = camera_start_position;
+            camera->Front       = camera_start_front;
+            camera->Yaw         = camera_start_yaw;
+            camera->Pitch       = camera_start_pitch;
+            camera_event_active = false;
+            camera_event_step   = CameraEventStep::None;
+            break;
+
+        case CameraEventStep::None: break;
+        }
     }
 
     void MainController::begin_draw() {
