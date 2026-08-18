@@ -86,9 +86,9 @@ namespace app {
     }
 
     void MainController::draw_statue() {
-        auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
-        auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
-
+        auto resources                    = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics                     = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        auto gui                          = engine::core::Controller::get<GuiController>();
         engine::resources::Model *statue  = resources->model("statue");
         //shaders
         engine::resources::Shader *shader = resources->shader("spotlight");
@@ -106,15 +106,16 @@ namespace app {
         glm::vec3 lightDirection = glm::normalize(target - lightPos);
         shader->set_vec3("lightPos", lightPos);
         shader->set_vec3("lightDirection", lightDirection);
-        shader->set_vec3("lightColor", glm::vec3(0, 0.7f, 1.0f));
+        const float *color = gui->get_color();
+        shader->set_vec3("lightColor", glm::vec3(color[0], color[1], color[2]));
         shader->set_float("ambientStrength", 0.08f);
         shader->set_float("specularStrength", 0.25f);
         shader->set_float("cutOff", glm::cos(glm::radians(20.0f)));
         shader->set_float("outerCutOff", glm::cos(glm::radians(30.0f)));
         //Circle light
         float pulse = 0.5f + 0.5f * sin(pulseTime * 3.0f);
-        glm::vec3 darkColor(0.0f, 0.5f, 0.25f);
-        glm::vec3 brightColor(0.0f, 1.0f, 0.5f);
+        glm::vec3 darkColor(0.75f, 0.62f, 0.20f);
+        glm::vec3 brightColor(1.0f, 0.90f, 0.45f);
 
         glm::vec3 circleLightColor = glm::mix(darkColor, brightColor, pulse);
 
@@ -122,7 +123,7 @@ namespace app {
 
         shader->set_vec3("circleLightPos", circleLightPos);
         shader->set_vec3("circleLightColor", circleLightColor);
-        float circleLightStrength = 0.5f + pulse * 1.5f;
+        float circleLightStrength = 0.5f + pulse * 0.75f;
         shader->set_float("circleLightStrenght", circleLightStrength);
         statue->draw(shader);
     }
@@ -145,9 +146,9 @@ namespace app {
 
         float pulse = 0.5f + 0.5f * sin(pulseTime * 3.0f);
 
-        glm::vec3 darkGreen(0.0f, 0.5f, 0.25f);
-        glm::vec3 brightGreen(0.0f, 1.0f, 0.5f);
-        glm::vec3 color = glm::mix(darkGreen, brightGreen, pulse);
+        glm::vec3 darkColor(0.65f, 0.50f, 0.08f);
+        glm::vec3 brightColor(1.0f, 0.90f, 0.45f);
+        glm::vec3 color = glm::mix(darkColor, brightColor, pulse);
         shader->set_vec3("lightColor", color);
         shader->set_float("emissionStrength", 1.0f);
 
@@ -158,6 +159,7 @@ namespace app {
     void MainController::draw_dungeon() {
         auto resources                    = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics                     = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        auto gui                          = engine::core::Controller::get<GuiController>();
         engine::resources::Model *dungeon = resources->model("dungeon");
 
         //shaders
@@ -174,15 +176,16 @@ namespace app {
         glm::vec3 lightDirection = glm::normalize(target - lightPos);
         shader->set_vec3("lightPos", lightPos);
         shader->set_vec3("lightDirection", lightDirection);
-        shader->set_vec3("lightColor", glm::vec3(0, 0.7f, 1.0f));
+        const float *color = gui->get_color();
+        shader->set_vec3("lightColor", glm::vec3(color[0], color[1], color[2]));
         shader->set_float("ambientStrength", 0.08f);
         shader->set_float("specularStrength", 0.25f);
         shader->set_float("cutOff", glm::cos(glm::radians(20.0f)));
         shader->set_float("outerCutOff", glm::cos(glm::radians(30.0f)));
         //Circle light
         float pulse = 0.5f + 0.5f * sin(pulseTime * 3.0f);
-        glm::vec3 darkColor(0.0f, 0.5f, 0.25f);
-        glm::vec3 brightColor(0.0f, 1.0f, 0.5f);
+        glm::vec3 darkColor(0.75f, 0.62f, 0.20f);
+        glm::vec3 brightColor(1.0f, 0.90f, 0.45f);
 
         glm::vec3 circleLightColor = glm::mix(darkColor, brightColor, pulse);
 
@@ -190,7 +193,7 @@ namespace app {
 
         shader->set_vec3("circleLightPos", circleLightPos);
         shader->set_vec3("circleLightColor", circleLightColor);
-        float circleLightStrength = 0.5f + pulse * 1.5f;
+        float circleLightStrength = 0.5f + pulse * 0.75f;
         shader->set_float("circleLightStrenght", circleLightStrength);
 
         shader->set_mat4("model", model);
