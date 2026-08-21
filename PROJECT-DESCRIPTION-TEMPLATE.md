@@ -5,18 +5,20 @@
 
 ## Controls
 
-{BUTTON1} -> {ACTION1}  
-{BUTTON2} -> {ACTION2}  
-...  
-{BUTTONN} -> {ACTIONN}
+{W} -> {Move Forwards}  
+{S} -> {Move Backwards} {A} -> {Move Left}  
+{D} -> {Move Right}  
+{Space} -> {Move Upwards}  
+{Ctrl} -> {Move Downwards} {E} -> {Open GUI} {Q} -> {Start cinematic camera}
 
 ## Features
 
 ### Fundamental:
 
-[ ] Model with lighting
-[ ] Two types of lighting with customizable colors and movement through GUI or ACTIONS
-[ ] {ACTION_X} --- AFTER_M_SECONDS---Triggers---> {EVENT_A} ---> AFTER_N_SECONDS---Triggers---> {EVENT_B}
+[X] Model with lighting
+[X] Two types of lighting with customizable colors and movement through GUI or ACTIONS
+[X] {PRESS Q} -> AFTER 2 SECONDS -> {LOOK AT STATUE FROM ANGLE 1} -> AFTER 2 SECONDS -> {LOOK AT STATUE FROM ANGLE 2} ->
+AFTER 2 SECONDS -> {LOOK AT STATUE FROM ANGLE 3} -> {RETURN CAMERA}
 
 ### Group A:
 
@@ -26,6 +28,7 @@
 [ ] Bloom with the use of HDR
 
 ### Group B:
+
 [ ] Deferred Shading  
 [ ] Point Shadows  
 [ ] SSAO
@@ -36,12 +39,18 @@
 
 ## Models:
 
-[link1]   
-[link2]
+[[link1] ](https://sketchfab.com/3d-models/dungeon-wall-floor-test-set-8179c07fbb62442888fcabedea96ffd3)  
+[link2](https://sketchfab.com/3d-models/virgin-mary-statue-low-poly-2c30b704e39141a990b7ad2ab31d3e31)
+[link3](https://sketchfab.com/3d-models/magic-circle-48395005e0e644b9a5e5cad9b1b853aa)
 
 ## Textures
 
-[link1]  
-[link2]
+[link1](https://polyhaven.com/a/rock_wall_08)
 
-{OTHER-RESOURCES}
+## Gui
+
+https://github.com/ocornut/imgui/issues/707
+
+## Skybox
+
+https://sketchfab.com/3d-models/cave-on-an-alien-planet-skybox-25aebeb12d8b481190bef3e86c3c2ddf

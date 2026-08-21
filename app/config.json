@@ -1,11 +1,22 @@
 {
   "resources": {
     "models": {
+      "halo": {
+        "path": "halo/scene.gltf"
+      },
+      "statue": {
+        "path": "statue/statue.gltf",
+        "flip_uvs": true
+      },
+      "dungeon": {
+        "path": "dungeon/scene.gltf",
+        "flip_uvs": true
+      }
     }
   },
   "window": {
-    "height": 600,
-    "title": "Hello, window!",
-    "width": 800
+    "height": 1200,
+    "title": "CryptMancer",
+    "width": 1600
   }
 }
