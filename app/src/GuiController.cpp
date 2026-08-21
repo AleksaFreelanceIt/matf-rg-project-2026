@@ -1,10 +1,11 @@
 //
 // Created by rlm on 12/08/2026.
 //
+#include <GuiController.hpp>
+#include <MainController.hpp>
 #include <engine/graphics/GraphicsController.hpp>
 #include <engine/platform/PlatformController.hpp>
-
-#include <GuiController.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 
 namespace app {
@@ -65,10 +66,11 @@ void GuiController::poll_events() {
 }
 
 void GuiController::draw() {
+    auto main = engine::core::Controller::get<MainController>();
     auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
     graphics->begin_gui();
     ImGui::Begin("ColorPicker");
-    ImGui::ColorPicker3("Color", color);
+    ImGui::ColorPicker3("Color", glm::value_ptr(main->get_light_color()));
     ImGui::End();
 
     graphics->end_gui();

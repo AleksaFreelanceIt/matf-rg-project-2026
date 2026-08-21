@@ -13,14 +13,7 @@ public:
         return "app::GuiController";
     }
 
-    const float *get_color() const {
-        return color;
-    }
-
-private
-    :
-    float color[3] = {0.0f, 1.0f, 0.5f};
-
+private:
     void initialize() override;
 
     void draw() override;
