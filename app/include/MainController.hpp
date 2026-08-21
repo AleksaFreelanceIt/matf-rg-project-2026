@@ -8,54 +8,60 @@
 #include <engine/resources/ShaderCompiler.hpp>
 
 namespace app {
-    class MainController : public engine::core::Controller {
-    protected:
-        void initialize() override;
+class MainController : public engine::core::Controller {
+public:
+    glm::vec3 &get_light_color() {
+        return m_light_color;
+    }
 
-        bool loop() override;
+protected:
+    void initialize() override;
 
-        void draw_skybox();
+    bool loop() override;
 
-        void draw_statue();
+    void draw_skybox();
 
-        void draw_halo();
+    void draw_statue();
 
-        void draw_dungeon();
+    void draw_halo();
 
-        void begin_draw() override;
+    void draw_dungeon();
 
-        void update_camera();
+    void begin_draw() override;
 
-        void update() override;
+    void update_camera();
 
-        void draw() override;
+    void update() override;
 
-        void end_draw() override;
+    void draw() override;
 
-    private:
-        float pulseTime = 0;
+    void end_draw() override;
 
-        enum class CameraEventStep {
-            None,
-            Shot1,
-            Shot2,
-            Shot3,
-            Return
-        };
+private:
+    float m_pulse_time = 0;
+    glm::vec3 m_light_color = glm::vec3(0.0f, 1.0f, 0.5f);
 
-        CameraEventStep camera_event_step = CameraEventStep::None;
-
-        float camera_event_timer = 0.0f;
-        bool camera_event_active = false;
-
-        glm::vec3 camera_start_position;
-        glm::vec3 camera_start_front;
-        float camera_start_yaw   = 0.0f;
-        float camera_start_pitch = 0.0f;
-
-        void start_camera_event();
-
-        void update_camera_event();
+    enum class CameraEventStep {
+        None,
+        Shot1,
+        Shot2,
+        Shot3,
+        Return
     };
-} // namespace app
+
+    CameraEventStep m_camera_event_step = CameraEventStep::None;
+
+    float m_camera_event_timer = 0.0f;
+    bool m_camera_event_active = false;
+
+    glm::vec3 m_camera_start_position;
+    glm::vec3 m_camera_start_front;
+    float m_camera_start_yaw = 0.0f;
+    float m_camera_start_pitch = 0.0f;
+
+    void start_camera_event();
+
+    void update_camera_event();
+};
+}// namespace app
 #endif//MATF_RG_PROJECT_MAINCONTROLLER_HPP

@@ -2,7 +2,7 @@
 // Created by rlm on 09/08/2026.
 //
 
-#include "../include/MainController.hpp"
+#include "MainController.hpp"
 
 #include <GuiController.hpp>
 #include <engine/graphics/GraphicsController.hpp>
@@ -12,8 +12,6 @@
 #include <spdlog/fmt/bundled/compile.h>
 
 namespace app {
-float pulseTime = 0;
-
 class MainPlatformEventObserver : public engine::platform::PlatformEventObserver {
     void on_mouse_move(engine::platform::MousePosition position) override;
 };
@@ -72,12 +70,12 @@ void MainController::update_camera() {
 void MainController::update() {
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
 
-    if (!camera_event_active && platform->key(engine::platform::KeyId::KEY_Q).state() ==
-                                        engine::platform::Key::State::JustPressed) {
+    if (!m_camera_event_active && platform->key(engine::platform::KeyId::KEY_Q).state() ==
+                                          engine::platform::Key::State::JustPressed) {
         start_camera_event();
     }
 
-    if (camera_event_active) {
+    if (m_camera_event_active) {
         update_camera_event();
         return;
     }
@@ -88,14 +86,14 @@ void MainController::start_camera_event() {
     auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
     auto camera = graphics->camera();
 
-    camera_start_position = camera->Position;
-    camera_start_front = camera->Front;
-    camera_start_yaw = camera->Yaw;
-    camera_start_pitch = camera->Pitch;
+    m_camera_start_position = camera->Position;
+    m_camera_start_front = camera->Front;
+    m_camera_start_yaw = camera->Yaw;
+    m_camera_start_pitch = camera->Pitch;
 
-    camera_event_active = true;
-    camera_event_step = CameraEventStep::Shot1;
-    camera_event_timer = 0.0f;
+    m_camera_event_active = true;
+    m_camera_event_step = CameraEventStep::Shot1;
+    m_camera_event_timer = 0.0f;
 }
 
 void MainController::update_camera_event() {
@@ -103,40 +101,40 @@ void MainController::update_camera_event() {
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     auto camera = graphics->camera();
 
-    camera_event_timer += platform->dt();
+    m_camera_event_timer += platform->dt();
     glm::vec3 target(0.45f, 0.8f, 0.75f);
-    switch (camera_event_step) {
+    switch (m_camera_event_step) {
         case CameraEventStep::Shot1:
             camera->Position = glm::vec3(1.8f, 1.2f, 2.2f);
             camera->Front = glm::normalize(target - camera->Position);
-            if (camera_event_timer > 2.0f) {
-                camera_event_step = CameraEventStep::Shot2;
-                camera_event_timer = 0.0f;
+            if (m_camera_event_timer > 2.0f) {
+                m_camera_event_step = CameraEventStep::Shot2;
+                m_camera_event_timer = 0.0f;
             }
             break;
         case CameraEventStep::Shot2:
             camera->Position = glm::vec3(-1.2f, 1.0f, 1.5f);
             camera->Front = glm::normalize(target - camera->Position);
-            if (camera_event_timer > 2.0f) {
-                camera_event_step = CameraEventStep::Shot3;
-                camera_event_timer = 0.0f;
+            if (m_camera_event_timer > 2.0f) {
+                m_camera_event_step = CameraEventStep::Shot3;
+                m_camera_event_timer = 0.0f;
             }
             break;
         case CameraEventStep::Shot3:
             camera->Position = glm::vec3(0.8f, 1.6f, -0.8f);
             camera->Front = glm::normalize(target - camera->Position);
-            if (camera_event_timer > 2.0f) {
-                camera_event_step = CameraEventStep::Return;
-                camera_event_timer = 0.0f;
+            if (m_camera_event_timer > 2.0f) {
+                m_camera_event_step = CameraEventStep::Return;
+                m_camera_event_timer = 0.0f;
             }
             break;
         case CameraEventStep::Return:
-            camera->Position = camera_start_position;
-            camera->Front = camera_start_front;
-            camera->Yaw = camera_start_yaw;
-            camera->Pitch = camera_start_pitch;
-            camera_event_active = false;
-            camera_event_step = CameraEventStep::None;
+            camera->Position = m_camera_start_position;
+            camera->Front = m_camera_start_front;
+            camera->Yaw = m_camera_start_yaw;
+            camera->Pitch = m_camera_start_pitch;
+            m_camera_event_active = false;
+            m_camera_event_step = CameraEventStep::None;
             break;
 
         case CameraEventStep::None: break;
@@ -158,7 +156,6 @@ void MainController::draw_skybox() {
 void MainController::draw_statue() {
     auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
     auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
-    auto gui = engine::core::Controller::get<GuiController>();
     engine::resources::Model *statue = resources->model("statue");
     //shaders
     engine::resources::Shader *shader = resources->shader("spotlight");
@@ -176,14 +173,13 @@ void MainController::draw_statue() {
     glm::vec3 lightDirection = glm::normalize(target - lightPos);
     shader->set_vec3("lightPos", lightPos);
     shader->set_vec3("lightDirection", lightDirection);
-    const float *color = gui->get_color();
-    shader->set_vec3("lightColor", glm::vec3(color[0], color[1], color[2]));
+    shader->set_vec3("lightColor", m_light_color);
     shader->set_float("ambientStrength", 0.08f);
     shader->set_float("specularStrength", 0.25f);
     shader->set_float("cutOff", glm::cos(glm::radians(20.0f)));
     shader->set_float("outerCutOff", glm::cos(glm::radians(30.0f)));
     //Circle light
-    float pulse = 0.5f + 0.5f * sin(pulseTime * 3.0f);
+    float pulse = 0.5f + 0.5f * sin(m_pulse_time * 3.0f);
     glm::vec3 darkColor(0.75f, 0.62f, 0.20f);
     glm::vec3 brightColor(1.0f, 0.90f, 0.45f);
 
@@ -203,7 +199,7 @@ void MainController::draw_halo() {
     auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     engine::resources::Model *halo = resources->model("halo");
-    pulseTime += platform->dt();
+    m_pulse_time += platform->dt();
     //shaders
     engine::resources::Shader *shader = resources->shader("basic");
     shader->use();
@@ -214,7 +210,7 @@ void MainController::draw_halo() {
     model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1, 0, 0));
     model = glm::scale(model, glm::vec3(0.04f));
 
-    float pulse = 0.5f + 0.5f * sin(pulseTime * 3.0f);
+    float pulse = 0.5f + 0.5f * sin(m_pulse_time * 3.0f);
 
     glm::vec3 darkColor(0.65f, 0.50f, 0.08f);
     glm::vec3 brightColor(1.0f, 0.90f, 0.45f);
@@ -229,7 +225,6 @@ void MainController::draw_halo() {
 void MainController::draw_dungeon() {
     auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
     auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
-    auto gui = engine::core::Controller::get<GuiController>();
     engine::resources::Model *dungeon = resources->model("dungeon");
 
     //shaders
@@ -246,14 +241,13 @@ void MainController::draw_dungeon() {
     glm::vec3 lightDirection = glm::normalize(target - lightPos);
     shader->set_vec3("lightPos", lightPos);
     shader->set_vec3("lightDirection", lightDirection);
-    const float *color = gui->get_color();
-    shader->set_vec3("lightColor", glm::vec3(color[0], color[1], color[2]));
+    shader->set_vec3("lightColor", m_light_color);
     shader->set_float("ambientStrength", 0.08f);
     shader->set_float("specularStrength", 0.25f);
     shader->set_float("cutOff", glm::cos(glm::radians(20.0f)));
     shader->set_float("outerCutOff", glm::cos(glm::radians(30.0f)));
     //Circle light
-    float pulse = 0.5f + 0.5f * sin(pulseTime * 3.0f);
+    float pulse = 0.5f + 0.5f * sin(m_pulse_time * 3.0f);
     glm::vec3 darkColor(0.75f, 0.62f, 0.20f);
     glm::vec3 brightColor(1.0f, 0.90f, 0.45f);
 
